@@ -1,0 +1,5 @@
+2024-10-25T18:18:46.074Z  WARN 10476 --- [apol] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=20h9m51s950ms422µs200ns).
+2024-10-25T18:18:46.319Z DEBUG 10476 --- [apol] [SpringApplicationShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@6b7d1df8, started on Thu Oct 24 22:08:47 GMT 2024
+2024-10-25T18:18:46.367Z  INFO 10476 --- [apol] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-25T18:18:46.424Z  INFO 10476 --- [apol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-10-25T18:18:46.464Z  INFO 10476 --- [apol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
