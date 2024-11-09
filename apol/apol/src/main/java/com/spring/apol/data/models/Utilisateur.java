@@ -19,30 +19,33 @@ public class Utilisateur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Le nom complet ne peut pas être vide")
+    @Column(name = "nom_complet", nullable = false)
+    private String nomComplet;
+
     @NotBlank(message = "L'email ne peut pas être vide")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Le nom complet ne peut pas être vide")
-    @Column(nullable = false)
-    private String nomComplet;
-
-    @JsonIgnore // Empêche le mot de passe d'être sérialisé dans les réponses JSON
+    @JsonIgnore
     @NotBlank(message = "Le mot de passe ne peut pas être vide")
     @Column(nullable = false)
     private String password;
 
     @NotBlank(message = "Le mois de naissance ne peut pas être vide")
-    @Column(nullable = false)
+    @Column(name = "mois_naissance", nullable = false)
     private String moisNaissance;
 
-    @Column(nullable = false)
+    @Column(name = "annee_naissance", nullable = false)
     private int anneeNaissance;
+
+    @Column(name = "jour_de_naissance", nullable = false)
+    private int jourDeNaissance;
 
     @Column(nullable = false)
     private String telephone;
 
-    @Column()
+    @Column
     private String photo;
 
     @NotBlank(message = "Le matricule ne peut pas être vide")
@@ -55,10 +58,21 @@ public class Utilisateur {
     private RoleUtilisateur role;
 
     @CreationTimestamp
+    @Column(name = "date_creation")
     private LocalDateTime dateCreation;
 
     @UpdateTimestamp
+    @Column(name = "date_miseajour")
     private LocalDateTime dateMiseAJour;
+
+    @ManyToOne
+    @JoinColumn(name = "filiere_id")
+    private Filiere filiere;
+
+    @ManyToOne
+    @JoinColumn(name = "classe_id")
+    @JsonIgnore
+    private Classe classe;
 
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bulletin> bulletins = new ArrayList<>();
@@ -74,13 +88,4 @@ public class Utilisateur {
 
     @OneToMany(mappedBy = "professeur", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Syllabus> syllabus = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "filiere_id")
-    private Filiere filiereId;
-
-    @ManyToOne
-    @JoinColumn(name = "classe_id")
-    @JsonIgnore // Ignore la classe dans les sérialisations JSON
-    private Classe classe; // Référence à la classe de l'utilisateur
 }

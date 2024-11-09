@@ -14,13 +14,14 @@ public class UtilisateurDto {
     private String password;
     private String moisNaissance;
     private int anneeNaissance;
+    private int jourDeNaissance;
     private String telephone;
     private String matricule;
     private RoleUtilisateur role;
     private Long classeId;
     private Long filiereId;
+    private String photo;
 
-    // Convertir l'entité Utilisateur en DTO
     public static UtilisateurDto fromEntity(Utilisateur utilisateur) {
         UtilisateurDto dto = new UtilisateurDto();
         dto.setId(utilisateur.getId());
@@ -29,22 +30,23 @@ public class UtilisateurDto {
         dto.setPassword(utilisateur.getPassword());
         dto.setMoisNaissance(utilisateur.getMoisNaissance());
         dto.setAnneeNaissance(utilisateur.getAnneeNaissance());
+        dto.setJourDeNaissance(utilisateur.getJourDeNaissance());
         dto.setTelephone(utilisateur.getTelephone());
         dto.setMatricule(utilisateur.getMatricule());
         dto.setRole(utilisateur.getRole());
+        dto.setPhoto(utilisateur.getPhoto());
 
         if (utilisateur.getClasse() != null) {
             dto.setClasseId(utilisateur.getClasse().getId());
         }
 
-        if (utilisateur.getFiliereId() != null) {
-            dto.setFiliereId(utilisateur.getFiliereId().getId());
+        if (utilisateur.getFiliere() != null) {
+            dto.setFiliereId(utilisateur.getFiliere().getId());
         }
 
         return dto;
     }
 
-    // Convertir le DTO en entité Utilisateur
     public Utilisateur toEntity() {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(this.id);
@@ -53,11 +55,12 @@ public class UtilisateurDto {
         utilisateur.setPassword(this.password);
         utilisateur.setMoisNaissance(this.moisNaissance);
         utilisateur.setAnneeNaissance(this.anneeNaissance);
+        utilisateur.setJourDeNaissance(this.jourDeNaissance);
         utilisateur.setTelephone(this.telephone);
         utilisateur.setMatricule(this.matricule);
         utilisateur.setRole(this.role);
+        utilisateur.setPhoto(this.photo);
 
-        // Set classe and filiere only if the role is ETUDIANT or CHEF_DE_CLASSE
         if (this.role == RoleUtilisateur.ETUDIANT || this.role == RoleUtilisateur.CHEF_CLASSE) {
             if (this.classeId != null) {
                 Classe classe = new Classe();
@@ -68,12 +71,11 @@ public class UtilisateurDto {
             if (this.filiereId != null) {
                 Filiere filiere = new Filiere();
                 filiere.setId(this.filiereId);
-                utilisateur.setFiliereId(filiere);
+                utilisateur.setFiliere(filiere);
             }
         } else {
-            // Set classe and filiere to null for roles other than ETUDIANT or CHEF_DE_CLASSE
             utilisateur.setClasse(null);
-            utilisateur.setFiliereId(null);
+            utilisateur.setFiliere(null);
         }
 
         return utilisateur;

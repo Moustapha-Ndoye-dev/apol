@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
@@ -20,6 +21,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
     private final ClasseRepository classeRepository;
     private final FiliereRepository filiereRepository;
+    private final Random random = new Random();
 
     public UtilisateurServiceImpl(UtilisateurRepository utilisateurRepository,
                                   ClasseRepository classeRepository,
@@ -33,7 +35,18 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public UtilisateurDto addUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurDto.toEntity();
 
-        // Set classe and filiere only if the role is ETUDIANT or CHEF_DE_CLASSE
+        // Generate login (email)
+        String login = generateLogin(utilisateur.getNomComplet());
+        utilisateur.setEmail(login);
+
+        // Generate matricule
+        String matricule = generateUniqueMatricule(utilisateur.getRole());
+        utilisateur.setMatricule(matricule);
+
+        // Generate password
+        String password = generatePassword(utilisateur.getMoisNaissance(), utilisateur.getAnneeNaissance(), matricule);
+        utilisateur.setPassword(password);
+
         if (utilisateur.getRole() == RoleUtilisateur.ETUDIANT || utilisateur.getRole() == RoleUtilisateur.CHEF_CLASSE) {
             if (utilisateurDto.getClasseId() != null) {
                 Classe classe = classeRepository.findById(utilisateurDto.getClasseId())
@@ -43,13 +56,57 @@ public class UtilisateurServiceImpl implements UtilisateurService {
             if (utilisateurDto.getFiliereId() != null) {
                 Filiere filiere = filiereRepository.findById(utilisateurDto.getFiliereId())
                         .orElseThrow(() -> new RuntimeException("Filiere non trouvée"));
-                utilisateur.setFiliereId(filiere);
+                utilisateur.setFiliere(filiere);
             }
         }
 
         utilisateur = utilisateurRepository.save(utilisateur);
         return UtilisateurDto.fromEntity(utilisateur);
     }
+
+    private String generateLogin(String nomComplet) {
+        String[] parts = nomComplet.split(" ", 2);
+        String prenom = parts[0];
+        String nom = parts.length > 1 ? parts[1] : "";
+
+        return (prenom.toLowerCase().charAt(0) + nom.toLowerCase() + "@apol.edu").replaceAll("\\s+", "");
+    }
+
+    private String generateUniqueMatricule(RoleUtilisateur role) {
+        String matricule;
+        do {
+            matricule = generateMatricule(role);
+        } while (utilisateurRepository.findByMatricule(matricule).isPresent());
+        return matricule;
+    }
+
+    private String generateMatricule(RoleUtilisateur role) {
+        int firstDigit;
+        switch (role) {
+            case ADMINISTRATION:
+                firstDigit = 1;
+                break;
+            case PROFESSEUR:
+                firstDigit = 4;
+                break;
+            case ETUDIANT:
+            case CHEF_CLASSE:
+                firstDigit = 8;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid role for matricule generation");
+        }
+        int randomPart = 10000 + random.nextInt(90000);
+        return String.format("%d%05d", firstDigit, randomPart);
+    }
+
+    private String generatePassword(String moisNaissance, int anneeNaissance, String matricule) {
+        String moisPart = moisNaissance.toLowerCase().substring(0, Math.min(moisNaissance.length(), 3));
+        String anneePart = String.format("%02d", anneeNaissance % 100);
+        return moisPart + anneePart + matricule;
+    }
+
+    // Other methods remain unchanged
 
     @Override
     public Optional<UtilisateurDto> updateUtilisateur(Long id, UtilisateurDto utilisateurDto) {
@@ -81,7 +138,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                 utilisateur.setRole(utilisateurDto.getRole());
             }
 
-            // Update classe and filiere if role is ETUDIANT or CHEF_DE_CLASSE
             if (utilisateurDto.getRole() == RoleUtilisateur.ETUDIANT || utilisateurDto.getRole() == RoleUtilisateur.CHEF_CLASSE) {
                 if (utilisateurDto.getClasseId() != null) {
                     Classe classe = classeRepository.findById(utilisateurDto.getClasseId())
@@ -91,11 +147,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                 if (utilisateurDto.getFiliereId() != null) {
                     Filiere filiere = filiereRepository.findById(utilisateurDto.getFiliereId())
                             .orElseThrow(() -> new RuntimeException("Filiere non trouvée"));
-                    utilisateur.setFiliereId(filiere);
+                    utilisateur.setFiliere(filiere);
                 }
             } else {
                 utilisateur.setClasse(null);
-                utilisateur.setFiliereId(null);
+                utilisateur.setFiliere(null);
             }
 
             utilisateurRepository.save(utilisateur);
