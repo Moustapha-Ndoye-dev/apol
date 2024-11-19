@@ -2,7 +2,6 @@ package com.spring.apol.api.dto;
 
 import com.spring.apol.data.enums.RoleUtilisateur;
 import com.spring.apol.data.models.Classe;
-import com.spring.apol.data.models.Filiere;
 import com.spring.apol.data.models.Utilisateur;
 import lombok.Data;
 
@@ -19,7 +18,6 @@ public class UtilisateurDto {
     private String matricule;
     private RoleUtilisateur role;
     private Long classeId;
-    private Long filiereId;
     private String photo;
 
     public static UtilisateurDto fromEntity(Utilisateur utilisateur) {
@@ -38,10 +36,6 @@ public class UtilisateurDto {
 
         if (utilisateur.getClasse() != null) {
             dto.setClasseId(utilisateur.getClasse().getId());
-        }
-
-        if (utilisateur.getFiliere() != null) {
-            dto.setFiliereId(utilisateur.getFiliere().getId());
         }
 
         return dto;
@@ -68,16 +62,7 @@ public class UtilisateurDto {
                 utilisateur.setClasse(classe);
             }
 
-            if (this.filiereId != null) {
-                Filiere filiere = new Filiere();
-                filiere.setId(this.filiereId);
-                utilisateur.setFiliere(filiere);
-            }
-        } else {
-            utilisateur.setClasse(null);
-            utilisateur.setFiliere(null);
         }
-
         return utilisateur;
     }
 }

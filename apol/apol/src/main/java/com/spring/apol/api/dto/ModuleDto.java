@@ -20,7 +20,6 @@ public class ModuleDto {
         Module module = new Module();
         module.setId(this.id);
         module.setNom(this.nom);
-        module.setDescription(this.description);
         // Ici, vous pouvez ajouter la logique pour récupérer les entités des professeurs et des classes si nécessaire
         return module;
     }
@@ -29,16 +28,6 @@ public class ModuleDto {
         ModuleDto dto = new ModuleDto();
         dto.setId(module.getId());
         dto.setNom(module.getNom());
-        dto.setDescription(module.getDescription());
-
-        // Récupérer les IDs des professeurs et des classes
-        dto.setProfesseursIds(module.getProfesseurs().stream()
-                .map(Utilisateur::getId)
-                .collect(Collectors.toList()));
-
-        dto.setClassesIds(module.getClasses().stream()
-                .map(Classe::getId)
-                .collect(Collectors.toList()));
 
         return dto;
     }

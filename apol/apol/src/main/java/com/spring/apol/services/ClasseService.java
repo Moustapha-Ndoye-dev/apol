@@ -9,6 +9,5 @@ public interface ClasseService {
     ClasseDto updateClasse(Long id, ClasseDto classeDto); // Mettre à jour une classe existante
     ClasseDto getClasseById(Long id); // Récupérer une classe par ID
     List<ClasseDto> getAllClasses(); // Récupérer toutes les classes
-    void deleteClasse(Long id); // Supprimer une classe par ID
-    List<ClasseDto> getClassesByFiliereId(Long filiereId); // Récupérer les classes par ID de filière
+    boolean deleteClasse(Long id); // Supprimer une classe par ID
 }

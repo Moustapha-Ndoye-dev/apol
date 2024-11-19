@@ -20,13 +20,8 @@ public class Classe {
     @Column(nullable = false)
     private Niveau niveau;
 
-    @ManyToMany(mappedBy = "classes")
-    private List<Module> modules;
 
     @ManyToMany(mappedBy = "classes")
     private List<Evaluation> evaluations;
 
-    @ManyToOne
-    @JoinColumn(name = "filiere_id")
-    private Filiere filiere;
 }

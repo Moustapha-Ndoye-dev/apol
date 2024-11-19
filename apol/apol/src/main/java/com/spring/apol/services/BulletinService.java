@@ -14,7 +14,7 @@ public interface BulletinService {
     BulletinDto updateBulletin(Long id, BulletinDto bulletinDto);
 
     // Méthode pour supprimer un bulletin
-    void deleteBulletin(Long id);
+    boolean deleteBulletin(Long id);
 
     // Méthode pour obtenir tous les bulletins d'un étudiant
     List<BulletinDto> getBulletinsByEtudiantId(Long etudiantId);

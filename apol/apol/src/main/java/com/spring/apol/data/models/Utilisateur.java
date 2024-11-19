@@ -65,9 +65,6 @@ public class Utilisateur {
     @Column(name = "date_miseajour")
     private LocalDateTime dateMiseAJour;
 
-    @ManyToOne
-    @JoinColumn(name = "filiere_id")
-    private Filiere filiere;
 
     @ManyToOne
     @JoinColumn(name = "classe_id")
@@ -79,9 +76,6 @@ public class Utilisateur {
 
     @OneToMany(mappedBy = "professeur", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CahierDeCharge> cahiersDeCharge = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "professeurs")
-    private List<Module> modules = new ArrayList<>();
 
     @OneToMany(mappedBy = "chefClasse", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CahierDeCharge> cahiersDeChargeChef = new ArrayList<>();

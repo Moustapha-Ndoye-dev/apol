@@ -41,9 +41,9 @@ public class UtilisateurController {
             // Validation spécifique pour ETUDIANT et CHEF_CLASSE
             if ((utilisateurDto.getRole() == RoleUtilisateur.ETUDIANT ||
                     utilisateurDto.getRole() == RoleUtilisateur.CHEF_CLASSE) &&
-                    (utilisateurDto.getClasseId() == null || utilisateurDto.getFiliereId() == null)) {
+                    (utilisateurDto.getClasseId() == null)) {
                 return ResponseEntity.badRequest()
-                        .body("La classe et la filière sont obligatoires pour les étudiants et chefs de classe");
+                        .body("La classe est obligatoires pour les étudiants et chefs de classe");
             }
 
             UtilisateurDto createdUser = utilisateurService.addUtilisateur(utilisateurDto);

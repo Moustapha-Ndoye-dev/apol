@@ -10,7 +10,7 @@ public interface CahierDeChargeService {
 
     CahierDeChargeDto updateCahierDeCharge(Long id, CahierDeChargeDto cahierDeChargeDto);
 
-    void deleteCahierDeCharge(Long id);
+    boolean deleteCahierDeCharge(Long id);
 
     CahierDeChargeDto getCahierDeChargeById(Long id);
 

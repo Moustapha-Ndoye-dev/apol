@@ -57,8 +57,9 @@ public class BulletinSrvImpl implements BulletinService {
     }
 
     @Override
-    public void deleteBulletin(Long id) {
+    public boolean deleteBulletin(Long id) {
         bulletinRepository.deleteById(id);
+        return false;
     }
 
     @Override

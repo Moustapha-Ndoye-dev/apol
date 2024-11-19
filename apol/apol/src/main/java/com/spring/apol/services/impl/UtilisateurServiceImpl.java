@@ -3,10 +3,8 @@ package com.spring.apol.services.impl;
 import com.spring.apol.api.dto.UtilisateurDto;
 import com.spring.apol.data.enums.RoleUtilisateur;
 import com.spring.apol.data.models.Classe;
-import com.spring.apol.data.models.Filiere;
 import com.spring.apol.data.models.Utilisateur;
 import com.spring.apol.data.repositories.ClasseRepository;
-import com.spring.apol.data.repositories.FiliereRepository;
 import com.spring.apol.data.repositories.UtilisateurRepository;
 import com.spring.apol.services.UtilisateurService;
 import org.springframework.stereotype.Service;
@@ -20,15 +18,12 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
     private final ClasseRepository classeRepository;
-    private final FiliereRepository filiereRepository;
     private final Random random = new Random();
 
     public UtilisateurServiceImpl(UtilisateurRepository utilisateurRepository,
-                                  ClasseRepository classeRepository,
-                                  FiliereRepository filiereRepository) {
+                                  ClasseRepository classeRepository) {
         this.utilisateurRepository = utilisateurRepository;
         this.classeRepository = classeRepository;
-        this.filiereRepository = filiereRepository;
     }
 
     @Override
@@ -53,11 +48,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                         .orElseThrow(() -> new RuntimeException("Classe non trouvée"));
                 utilisateur.setClasse(classe);
             }
-            if (utilisateurDto.getFiliereId() != null) {
-                Filiere filiere = filiereRepository.findById(utilisateurDto.getFiliereId())
-                        .orElseThrow(() -> new RuntimeException("Filiere non trouvée"));
-                utilisateur.setFiliere(filiere);
-            }
         }
 
         utilisateur = utilisateurRepository.save(utilisateur);
@@ -81,21 +71,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     private String generateMatricule(RoleUtilisateur role) {
-        int firstDigit;
-        switch (role) {
-            case ADMINISTRATION:
-                firstDigit = 1;
-                break;
-            case PROFESSEUR:
-                firstDigit = 4;
-                break;
-            case ETUDIANT:
-            case CHEF_CLASSE:
-                firstDigit = 8;
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid role for matricule generation");
-        }
+        int firstDigit = switch (role) {
+            case ADMINISTRATION -> 1;
+            case PROFESSEUR -> 4;
+            case ETUDIANT, CHEF_CLASSE -> 8;
+        };
         int randomPart = 10000 + random.nextInt(90000);
         return String.format("%d%05d", firstDigit, randomPart);
     }
@@ -144,14 +124,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                             .orElseThrow(() -> new RuntimeException("Classe non trouvée"));
                     utilisateur.setClasse(classe);
                 }
-                if (utilisateurDto.getFiliereId() != null) {
-                    Filiere filiere = filiereRepository.findById(utilisateurDto.getFiliereId())
-                            .orElseThrow(() -> new RuntimeException("Filiere non trouvée"));
-                    utilisateur.setFiliere(filiere);
-                }
-            } else {
-                utilisateur.setClasse(null);
-                utilisateur.setFiliere(null);
             }
 
             utilisateurRepository.save(utilisateur);

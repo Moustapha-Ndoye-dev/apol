@@ -58,8 +58,9 @@ public class CahierDeChargeSrvImpl implements CahierDeChargeService {
     }
 
     @Override
-    public void deleteCahierDeCharge(Long id) {
+    public boolean deleteCahierDeCharge(Long id) {
         cahierDeChargeRepository.deleteById(id);
+        return false;
     }
 
     @Override

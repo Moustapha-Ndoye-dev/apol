@@ -28,4 +28,8 @@ public class EmploiDuTemps {
     @ManyToOne
     @JoinColumn(name = "filiere_id", nullable = false)
     private Filiere filiere;
+
+    @ManyToOne
+    @JoinColumn(name = "salle_id", nullable = false)
+    private Salle salle;
 }

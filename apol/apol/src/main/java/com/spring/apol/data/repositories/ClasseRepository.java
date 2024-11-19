@@ -12,5 +12,4 @@ public interface ClasseRepository extends JpaRepository<Classe, Long> {
     List<Classe> findByNom(String nom);
 
     // Méthode pour trouver des classes par filière ID
-    List<Classe> findByFiliereId(Long filiereId);
 }

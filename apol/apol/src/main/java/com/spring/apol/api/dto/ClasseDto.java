@@ -10,17 +10,14 @@ public class ClasseDto {
     private Long id; // Identifiant unique de la classe
     private String nom; // Nom de la classe
     private Niveau niveau; // Niveau de la classe
-    private Long filiereId; // ID de la filière associée
-
     // Constructeur par défaut
     public ClasseDto() {}
 
     // Constructeur avec paramètres
-    public ClasseDto(Long id, String nom, Niveau niveau, Long filiereId) {
+    public ClasseDto(Long id, String nom, Niveau niveau) {
         this.id = id;
         this.nom = nom;
         this.niveau = niveau;
-        this.filiereId = filiereId;
     }
 
     // Méthode pour créer un DTO à partir d'une entité Classe
@@ -29,7 +26,6 @@ public class ClasseDto {
         dto.setId(classe.getId());
         dto.setNom(classe.getNom());
         dto.setNiveau(classe.getNiveau());
-        dto.setFiliereId(classe.getFiliere() != null ? classe.getFiliere().getId() : null);
         return dto;
     }
 
